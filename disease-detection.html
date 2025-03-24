@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Detection - Smart Farm Advisor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/disease-detection.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="material-icons menu-icon">menu</span>
+            <h1>Smart Farm Advisor</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">
+                <span class="material-icons">dashboard</span>
+                Dashboard
+            </a>
+            <a href="crop-advisor.html">
+                <span class="material-icons">agriculture</span>
+                Crop Advisor
+            </a>
+            <a href="weather.html">
+                <span class="material-icons">cloud</span>
+                Weather
+            </a>
+            <a href="disease-detection.html" class="active">
+                <span class="material-icons">bug_report</span>
+                Disease Detection
+            </a><br><br>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="grid">
+            <!-- Upload Section -->
+            <div class="card upload-section">
+                <div class="card-header">
+                    <h3>Upload Plant Image</h3>
+                </div>
+                <div class="card-content">
+                    <div id="uploadArea" class="upload-area">
+                        <div class="upload-content">
+                            <span class="material-icons">cloud_upload</span>
+                            <p>Drag and drop an image here or click to upload</p>
+                            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    <div id="previewContainer" class="preview-container" style="display: none;">
+                        <img id="imagePreview" src="" alt="Preview">
+                        <button class="clear-btn" onclick="clearImage()">
+                            <span class="material-icons">close</span>
+                        </button>
+                    </div>
+                    <div class="detection-controls">
+                        <button id="detectBtn" class="primary-btn" disabled>
+                            <span class="material-icons">science</span>
+                            Detect Disease
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="card results-section">
+                <div class="card-header">
+                    <h3>Detection Results</h3>
+                </div>
+                <div class="card-content">
+                    <div id="loading" class="loading" style="display: none;">
+                        <span class="material-icons spinning">refresh</span>
+                        Analyzing image...
+                    </div>
+                    <div id="error" class="error" style="display: none;"></div>
+                    <div id="results" class="results">
+                        <div class="placeholder">
+                            <span class="material-icons">science</span>
+                            <p>Upload a plant image to detect diseases</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disease Information -->
+            <div class="card disease-info">
+                <div class="card-header">
+                    <h3>Common Plant Diseases</h3>
+                </div>
+                <div class="card-content">
+                    <div class="disease-grid">
+                        <div class="disease-item">
+                            <div class="disease-header">
+                                <span class="material-icons">bug_report</span>
+                                <h4>Apple Scab</h4>
+                            </div>
+                            <p>Brown spots on leaves and fruit</p>
+                            <div class="disease-details">
+                                <span class="severity high">High Severity</span>
+                                <span class="treatment">Fungicide Treatment</span>
+                            </div>
+                        </div>
+                        <div class="disease-item">
+                            <div class="disease-header">
+                                <span class="material-icons">bug_report</span>
+                                <h4>Powdery Mildew</h4>
+                            </div>
+                            <p>White powdery growth on leaves</p>
+                            <div class="disease-details">
+                                <span class="severity medium">Medium Severity</span>
+                                <span class="treatment">Sulfur Treatment</span>
+                            </div>
+                        </div>
+                        <div class="disease-item">
+                            <div class="disease-header">
+                                <span class="material-icons">bug_report</span>
+                                <h4>Bacterial Spot</h4>
+                            </div>
+                            <p>Dark spots with yellow halos</p>
+                            <div class="disease-details">
+                                <span class="severity high">High Severity</span>
+                                <span class="treatment">Copper Treatment</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Chatbot Toggle Button -->
+    <button class="chatbot-toggle" onclick="toggleChatbot()">
+        <span class="material-icons">chat</span>
+        <span class="chatbot-text">Chat</span>
+        <span class="chatbot-label">Chat with AI Assistant</span>
+    </button>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <iframe src="https://cdn.botpress.cloud/webchat/v2.2/shareable.html?configUrl=https://files.bpcontent.cloud/2025/03/09/04/20250309043446-M7BXX4XJ.json"></iframe>
+    </div>
+
+    <script src="js/disease-detection.js"></script>
+    <script>
+        function toggleChatbot() {
+            const chatbot = document.querySelector('.chatbot-container');
+            chatbot.style.display = chatbot.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html> 

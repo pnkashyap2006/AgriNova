@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Advisor - Smart Farm Advisor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/crop-advisor.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="material-icons menu-icon">menu</span>
+            <h1>Smart Farm Advisor</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">
+                <span class="material-icons">dashboard</span>
+                Dashboard
+            </a>
+            <a href="crop-advisor.html" class="active">
+                <span class="material-icons">agriculture</span>
+                Crop Advisor
+            </a>
+            <a href="weather.html">
+                <span class="material-icons">cloud</span>
+                Weather
+            </a>
+            <a href="disease-detection.html">
+                <span class="material-icons">bug_report</span>
+                Disease Detection
+            </a><br><br>
+            <!-- <a href="community.html">
+                <span class="material-icons">forum</span>
+                Community
+            </a>
+            <a href="profile.html">
+                <span class="material-icons">person</span>
+                Profile
+            </a> -->
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="grid">
+            <!-- Input Form -->
+            <div class="card">
+                <pre>
+
+
+                </pre>
+                <div class="card-header">
+                    <h3>Enter Farm Conditions</h3>
+                </div>
+                <div class="card-content">
+                    <form id="cropAdvisorForm" onsubmit="return false;">
+                        <div class="form-group">
+                            <label for="temperature">Temperature (°C)</label>
+                            <input type="number" id="temperature" name="temperature" min="0" max="50" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rainfall">Rainfall (mm)</label>
+                            <input type="number" id="rainfall" name="rainfall" min="0" max="5000" step="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pH">Soil pH</label>
+                            <input type="number" id="pH" name="pH" min="0" max="14" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="season">Season</label>
+                            <select id="season" name="season" required>
+                                <option value="">Select Season</option>
+                                <option value="Kharif">Kharif</option>
+                                <option value="Rabi">Rabi</option>
+                                <option value="Zaid">Zaid</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="soilType">Soil Type</label>
+                            <select id="soilType" name="soilType" required>
+                                <option value="">Select Soil Type</option>
+                                <option value="Clay">Clay</option>
+                                <option value="Sandy">Sandy</option>
+                                <option value="Loamy">Loamy</option>
+                                <option value="Black">Black</option>
+                                <option value="Red">Red</option>
+                                <option value="Alluvial">Alluvial</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn primary">
+                            <span class="material-icons">agriculture</span>
+                            Get Recommendations
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Recommendations Section -->
+            <div class="recommendations-container">
+                <div id="loading" class="loading" style="display: none;">
+                    <span class="material-icons spinning">refresh</span>
+                    Getting recommendations...
+                </div>
+                <div id="error" class="error" style="display: none;"></div>
+                <div id="recommendations" class="recommendations-grid"></div>
+            </div>
+        </div>
+
+        <!-- Selected Crop Details -->
+        <div id="selectedCropDetails" class="card" style="display: none;">
+            <div class="card-header">
+                <h3>Detailed Information</h3>
+                <button class="btn text" onclick="closeDetails()">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="card-content">
+                <div class="details-grid">
+                    <div class="details-section">
+                        <h4>Growing Conditions</h4>
+                        <div id="growingConditions"></div>
+                    </div>
+                    <div class="details-section">
+                        <h4>Economic Information</h4>
+                        <div id="economicInfo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Chatbot Toggle Button -->
+    <button class="chatbot-toggle" onclick="toggleChatbot()">
+        <span class="material-icons">chat</span>
+        <span class="chatbot-text">Chat</span>
+        <span class="chatbot-label">Chat with AI Assistant</span>
+    </button>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <iframe src="https://cdn.botpress.cloud/webchat/v2.2/shareable.html?configUrl=https://files.bpcontent.cloud/2025/03/09/04/20250309043446-M7BXX4XJ.json"></iframe>
+    </div>
+
+    <script src="js/crop-advisor.js"></script>
+    <script>
+        function toggleChatbot() {
+            const chatbot = document.querySelector('.chatbot-container');
+            chatbot.style.display = chatbot.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html> 

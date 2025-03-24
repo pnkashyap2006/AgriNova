@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather - Smart Farm Advisor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/weather.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span class="material-icons menu-icon">menu</span>
+            <h1>Smart Farm Advisor</h1>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">
+                <span class="material-icons">dashboard</span>
+                Dashboard
+            </a>
+            <a href="crop-advisor.html">
+                <span class="material-icons">agriculture</span>
+                Crop Advisor
+            </a>
+            <a href="weather.html" class="active">
+                <span class="material-icons">cloud</span>
+                Weather
+            </a>
+            <a href="disease-detection.html">
+                <span class="material-icons">bug_report</span>
+                Disease Detection
+            </a><br><br>
+            <!-- <a href="community.html">
+                <span class="material-icons">forum</span>
+                Community
+            </a>
+            <a href="profile.html">
+                <span class="material-icons">person</span>
+                Profile
+            </a> -->
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="grid">
+            <!-- Current Weather -->
+             <pre>
+
+                
+             </pre>
+            <div class="card current-weather">
+                <div class="card-header">
+                    <h3>Current Weather</h3>
+                    <div class="location">
+                        <span class="material-icons">location_on</span>
+                        <span id="location">Loading location...</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="loading" class="loading">
+                        <span class="material-icons spinning">refresh</span>
+                        Loading weather data...
+                    </div>
+                    <div id="error" class="error" style="display: none;"></div>
+                    <div class="weather-info">
+                        <div class="temperature">
+                            <span id="currentTemp">--</span>
+                            <span class="unit">°C</span>
+                        </div>
+                        <div class="weather-details">
+                            <div class="detail-item">
+                                <span class="material-icons">water_drop</span>
+                                <span id="humidity">--%</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="material-icons">air</span>
+                                <span id="windSpeed">-- km/h</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="material-icons">grain</span>
+                                <span id="uvIndex">--</span>
+                            </div>
+                        </div>
+                        <div class="weather-description" id="weatherDesc">
+                            Loading...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Forecast -->
+            <div class="card forecast">
+                <div class="card-header">
+                    <h3>7-Day Forecast</h3>
+                </div>
+                <div class="card-content">
+                    <div class="forecast-grid" id="forecastGrid">
+                        <!-- Forecast items will be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Alerts -->
+            <div class="card alerts">
+                <div class="card-header">
+                    <h3>Weather Alerts</h3>
+                    <span class="material-icons">notifications</span>
+                </div>
+                <div class="card-content">
+                    <div id="alertsList">
+                        <div class="alert-item">
+                            <span class="material-icons warning">warning</span>
+                            <div class="alert-content">
+                                <h4>Heavy Rainfall Expected</h4>
+                                <p>High probability of heavy rainfall in the next 24 hours. Take necessary precautions.</p>
+                            </div>
+                        </div>
+                        <div class="alert-item">
+                            <span class="material-icons warning">warning</span>
+                            <div class="alert-content">
+                                <h4>Temperature Spike</h4>
+                                <p>Temperature expected to rise above 35°C tomorrow. Ensure proper irrigation.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weather Map -->
+            <div class="card weather-map">
+                <div class="card-header">
+                    <h3>Weather Map</h3>
+                </div>
+                <div class="card-content">
+                    <div id="mapContainer" class="map-container">
+                        <div class="map-placeholder">
+                            <span class="material-icons">map</span>
+                            <p>Loading weather map...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Chatbot Toggle Button -->
+    <button class="chatbot-toggle" onclick="toggleChatbot()">
+        <span class="material-icons">chat</span>
+        <span class="chatbot-text">Chat</span>
+        <span class="chatbot-label">Chat with AI Assistant</span>
+    </button>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <iframe src="https://cdn.botpress.cloud/webchat/v2.2/shareable.html?configUrl=https://files.bpcontent.cloud/2025/03/09/04/20250309043446-M7BXX4XJ.json"></iframe>
+    </div>
+
+    <script src="js/weather.js"></script>
+    <script>
+        function toggleChatbot() {
+            const chatbot = document.querySelector('.chatbot-container');
+            chatbot.style.display = chatbot.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html> 
