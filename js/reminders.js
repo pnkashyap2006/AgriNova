@@ -80,14 +80,6 @@ class SmartReminderSystem {
             <div class="card">
                 <div class="card-header">
                     <h3>Smart Reminders</h3>
-                    <div class="header-actions">
-                        <button class="btn secondary" id="addReminderBtn">
-                            <span class="material-icons">add</span>
-                        </button>
-                        <button class="btn secondary" id="reminderSettingsBtn">
-                            <span class="material-icons">settings</span>
-                        </button>
-                    </div>
                 </div>
                 <div class="card-content">
                     <div class="reminder-settings" style="display: none;">
@@ -150,7 +142,7 @@ class SmartReminderSystem {
                                 <label>
                                     <input type="checkbox" id="soundToggle" 
                                            ${this.settings.soundEnabled ? 'checked' : ''}>
-                                    Enable Sound
+                                    Sound
                                 </label>
                             </div>
                         </div>

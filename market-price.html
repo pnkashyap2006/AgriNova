@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Prices - AgriNova</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/market-price.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="images/logo.png" alt="AgriNova Logo" class="logo">
+            <span>AgriNova</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">
+                <span class="material-icons">dashboard</span>
+                Dashboard
+            </a>
+            <a href="weather.html">
+                <span class="material-icons">cloud</span>
+                Weather
+            </a>
+            <a href="crop-advisor.html">
+                <span class="material-icons">eco</span>
+                Crop Advisor
+            </a>
+            <a href="disease-detection.html">
+                <span class="material-icons">biotech</span>
+                Disease Detection
+            </a>
+            <a href="market-price.html" class="market-price-tab">
+                <span class="notification-dot"></span>
+                <span class="material-icons">trending_up</span>
+                <span class="tab-text">Market Price</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Current Market Prices</h2>
+                <div class="refresh-controls">
+                    <span id="lastUpdate" class="last-update">Last updated: --:--:--</span>
+                    <button id="refreshButton" class="btn refresh-btn">
+                        <span class="material-icons">refresh</span>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="price-filters">
+                <button id="sortPrice" class="btn">Sort by Price</button>
+                <button id="sortTrend" class="btn">Sort by Trend</button>
+                <button id="filterAll" class="btn">All</button>
+                <button id="filterUp" class="btn">Upward Trends</button>
+                <button id="filterDown" class="btn">Downward Trends</button>
+                <select id="trendPeriod">
+                    <option value="1d">Last 24 Hours</option>
+                    <option value="1w">Last Week</option>
+                    <option value="1m">Last Month</option>
+                    <option value="3m">Last 3 Months</option>
+                </select>
+            </div>
+            <div class="price-table-container">
+                <table class="price-table">
+                    <thead>
+                        <tr>
+                            <th>Crop</th>
+                            <th>Variety</th>
+                            <th>Price</th>
+                            <th>Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table content will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/market-price.js"></script>
+</body>
+</html> 

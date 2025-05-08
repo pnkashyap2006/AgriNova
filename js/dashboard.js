@@ -4,8 +4,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelector('.nav-links');
 
     if (menuIcon) {
-        menuIcon.addEventListener('click', function() {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        menuIcon.addEventListener('click', function(event) {
+            event.stopPropagation();
+            navLinks.classList.toggle('active');
+            
+            // Add animation class
+            if (navLinks.classList.contains('active')) {
+                navLinks.style.display = 'flex';
+                setTimeout(() => {
+                    navLinks.style.opacity = '1';
+                    navLinks.style.transform = 'translateY(0)';
+                }, 10);
+            } else {
+                navLinks.style.opacity = '0';
+                navLinks.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    navLinks.style.display = 'none';
+                }, 300);
+            }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!menuIcon.contains(event.target) && !navLinks.contains(event.target)) {
+                navLinks.classList.remove('active');
+                navLinks.style.opacity = '0';
+                navLinks.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    navLinks.style.display = 'none';
+                }, 300);
+            }
         });
     }
 
