@@ -32,6 +32,278 @@ const diseaseData = {
     }
 };
 
+class DiseaseDetectionSystem {
+    constructor() {
+        this.model = null;
+        this.cameraStream = null;
+        this.isScanning = false;
+        this.initialize();
+    }
+
+    async initialize() {
+        // Load TensorFlow.js model
+        try {
+            this.model = await tf.loadLayersModel('/models/plant_disease_model/model.json');
+            console.log('Disease detection model loaded successfully');
+        } catch (error) {
+            console.error('Error loading model:', error);
+        }
+
+        // Initialize UI elements
+        this.initializeUI();
+    }
+
+    initializeUI() {
+        // Create file input for multiple images
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.multiple = true;
+        fileInput.accept = 'image/*';
+        fileInput.id = 'diseaseImageInput';
+        fileInput.style.display = 'none';
+        document.body.appendChild(fileInput);
+
+        // Add event listeners
+        fileInput.addEventListener('change', (e) => this.handleImageUpload(e));
+        
+        // Initialize camera preview
+        this.initializeCamera();
+    }
+
+    async initializeCamera() {
+        try {
+            this.cameraStream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: 'environment' } 
+            });
+            
+            const videoElement = document.getElementById('cameraPreview');
+            if (videoElement) {
+                videoElement.srcObject = this.cameraStream;
+            }
+        } catch (error) {
+            console.error('Error accessing camera:', error);
+        }
+    }
+
+    async handleImageUpload(event) {
+        const files = event.target.files;
+        const results = [];
+
+        for (const file of files) {
+            try {
+                const image = await this.loadImage(file);
+                const prediction = await this.detectDisease(image);
+                results.push({
+                    filename: file.name,
+                    ...prediction
+                });
+            } catch (error) {
+                console.error(`Error processing ${file.name}:`, error);
+            }
+        }
+
+        this.displayResults(results);
+    }
+
+    async loadImage(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = e.target.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async detectDisease(image) {
+        // Preprocess image
+        const tensor = tf.browser.fromPixels(image)
+            .resizeBilinear([224, 224])
+            .expandDims()
+            .toFloat()
+            .div(255.0);
+
+        // Get prediction
+        const prediction = await this.model.predict(tensor).data();
+        
+        // Get top 3 predictions
+        const top3 = this.getTopPredictions(prediction, 3);
+        
+        // Clean up
+        tensor.dispose();
+        
+        return {
+            predictions: top3,
+            severity: this.calculateSeverity(top3[0].probability)
+        };
+    }
+
+    getTopPredictions(predictions, k) {
+        const indices = Array.from(predictions.keys())
+            .sort((a, b) => predictions[b] - predictions[a])
+            .slice(0, k);
+
+        return indices.map(index => ({
+            disease: this.getDiseaseName(index),
+            probability: predictions[index]
+        }));
+    }
+
+    calculateSeverity(probability) {
+        if (probability > 0.8) return 'High';
+        if (probability > 0.5) return 'Medium';
+        return 'Low';
+    }
+
+    getDiseaseName(index) {
+        // Map index to disease name
+        const diseases = [
+            'Healthy', 'Leaf Blight', 'Leaf Spot', 'Rust', 'Powdery Mildew'
+            // Add more diseases as needed
+        ];
+        return diseases[index] || 'Unknown';
+    }
+
+    async startLiveScan() {
+        if (!this.cameraStream) return;
+        
+        this.isScanning = true;
+        const videoElement = document.getElementById('cameraPreview');
+        
+        while (this.isScanning) {
+            try {
+                const prediction = await this.detectDisease(videoElement);
+                this.updateLiveResults(prediction);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Scan every second
+            } catch (error) {
+                console.error('Error in live scan:', error);
+                this.stopLiveScan();
+            }
+        }
+    }
+
+    stopLiveScan() {
+        this.isScanning = false;
+    }
+
+    updateLiveResults(prediction) {
+        const resultsElement = document.getElementById('liveResults');
+        if (resultsElement) {
+            resultsElement.innerHTML = `
+                <div class="prediction-result ${prediction.severity.toLowerCase()}">
+                    <h3>${prediction.predictions[0].disease}</h3>
+                    <p>Confidence: ${(prediction.predictions[0].probability * 100).toFixed(2)}%</p>
+                    <p>Severity: ${prediction.severity}</p>
+                </div>
+            `;
+        }
+    }
+
+    displayResults(results) {
+        const resultsContainer = document.getElementById('detectionResults');
+        if (resultsContainer) {
+            resultsContainer.innerHTML = results.map(result => `
+                <div class="result-card">
+                    <h3>${result.filename}</h3>
+                    <div class="predictions">
+                        ${result.predictions.map(pred => `
+                            <div class="prediction">
+                                <span class="disease">${pred.disease}</span>
+                                <span class="probability">${(pred.probability * 100).toFixed(2)}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="severity ${result.severity.toLowerCase()}">
+                        Severity: ${result.severity}
+                    </div>
+                    <div class="recommendations">
+                        ${this.getRecommendations(result.predictions[0].disease, result.severity)}
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    getRecommendations(disease, severity) {
+        // Return treatment recommendations based on disease and severity
+        const recommendations = {
+            'Leaf Blight': {
+                High: 'Apply fungicide immediately. Remove infected leaves.',
+                Medium: 'Apply preventive fungicide. Monitor closely.',
+                Low: 'Monitor and maintain good air circulation.'
+            },
+            'Leaf Spot': {
+                High: 'Apply copper-based fungicide. Remove infected leaves.',
+                Medium: 'Apply preventive fungicide. Improve drainage.',
+                Low: 'Monitor and maintain proper spacing.'
+            },
+            // Add more recommendations for other diseases
+        };
+
+        return recommendations[disease]?.[severity] || 'Monitor the plant closely.';
+    }
+
+    generateReport(results) {
+        const report = {
+            timestamp: new Date().toISOString(),
+            totalScans: results.length,
+            diseases: this.aggregateDiseases(results),
+            recommendations: this.generateActionPlan(results)
+        };
+
+        // Save report
+        this.saveReport(report);
+        
+        return report;
+    }
+
+    aggregateDiseases(results) {
+        const diseaseCount = {};
+        results.forEach(result => {
+            const disease = result.predictions[0].disease;
+            diseaseCount[disease] = (diseaseCount[disease] || 0) + 1;
+        });
+        return diseaseCount;
+    }
+
+    generateActionPlan(results) {
+        const actionPlan = {
+            immediate: [],
+            shortTerm: [],
+            longTerm: []
+        };
+
+        results.forEach(result => {
+            const { disease, severity } = result;
+            const recommendation = this.getRecommendations(disease, severity);
+            
+            if (severity === 'High') {
+                actionPlan.immediate.push(recommendation);
+            } else if (severity === 'Medium') {
+                actionPlan.shortTerm.push(recommendation);
+            } else {
+                actionPlan.longTerm.push(recommendation);
+            }
+        });
+
+        return actionPlan;
+    }
+
+    saveReport(report) {
+        // Save report to localStorage or send to server
+        const reports = JSON.parse(localStorage.getItem('diseaseReports') || '[]');
+        reports.push(report);
+        localStorage.setItem('diseaseReports', JSON.stringify(reports));
+    }
+}
+
+// Initialize disease detection system
+const diseaseDetection = new DiseaseDetectionSystem();
+
 document.addEventListener('DOMContentLoaded', function() {
     // Get DOM elements
     const uploadArea = document.getElementById('uploadArea');
