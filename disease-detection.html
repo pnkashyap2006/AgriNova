@@ -16,7 +16,7 @@
             <span class="material-icons menu-icon">menu</span>
             <h1>Smart Farm Advisor</h1>
         </div>
-        <div class="nav-links" style="display: none;">
+        <div class="nav-links">
             <a href="index.html">
                 <span class="material-icons">dashboard</span>
                 Dashboard
@@ -33,12 +33,16 @@
                 <span class="material-icons">bug_report</span>
                 Disease Detection
             </a>
+            <a href="farmer-analysis.html">
+                <span class="material-icons">bar_chart</span>
+                Farmer Analysis
+            </a>
+            <a href="market-price.html" class="market-price-tab">
+                <span class="notification-dot"></span>
+                <span class="material-icons">trending_up</span>
+                <span class="tab-text">Market Price</span>
+            </a>
         </div>
-        <a href="market-price.html" class="market-price-tab">
-            <span class="notification-dot"></span>
-            <span class="material-icons">trending_up</span>
-            <span class="tab-text">Market Price</span>
-        </a>
     </nav>
 
     <!-- Main Content -->
@@ -156,6 +160,21 @@
             const chatbot = document.querySelector('.chatbot-container');
             chatbot.style.display = chatbot.style.display === 'none' ? 'block' : 'none';
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuIcon = document.querySelector('.menu-icon');
+            const navLinks = document.querySelector('.nav-links');
+            if (menuIcon && navLinks) {
+                menuIcon.addEventListener('click', function() {
+                    navLinks.classList.toggle('open');
+                });
+                navLinks.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navLinks.classList.remove('open');
+                    });
+                });
+            }
+        });
     </script>
 </body>
 </html> 
